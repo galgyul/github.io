@@ -1,4 +1,26 @@
-<script>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>협동 힌트 게임</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    
+</head>
+<body class="bg-gray-100">
+    <div id="app">
+        <div class="flex items-center justify-center min-h-screen">
+            <p class="text-xl text-gray-500">게임 불러오는 중...</p>
+        </div>
+    </div>
+    
+    <div id="error-msg" class="hidden text-red-600 text-center text-lg font-bold mt-4 p-2 bg-red-100 rounded"></div>
+
+    <script>
     // 전역 변수 선언
     let db = null;
     let state = 'join';
@@ -346,12 +368,12 @@
           render();
           
           if (room.players && room.players[0].id === myId) {
-             manageTimerHost(); // 타이머 관리
-             checkAutoSkipHost(); // [추가됨] 힌트/정답 자동 넘김 확인
+              manageTimerHost(); // 타이머 관리
+              checkAutoSkipHost(); // [추가됨] 힌트/정답 자동 넘김 확인
           }
         } else {
-           alert('방 연결이 끊어졌습니다.');
-           location.reload();
+            alert('방 연결이 끊어졌습니다.');
+            location.reload();
         }
       });
     }
@@ -376,21 +398,21 @@
     function manageTimerHost() {
       if (state === 'giving-hints') {
         if (!timerInterval) {
-           timerInterval = setInterval(() => {
-             if (!room || room.gameState !== 'giving-hints') {
-               clearInterval(timerInterval);
-               timerInterval = null;
-               return;
-             }
-             
-             if (room.timeLeft > 0) {
-               db.ref('rooms/' + roomId + '/timeLeft').set(room.timeLeft - 1);
-             } else {
-               clearInterval(timerInterval);
-               timerInterval = null;
-               db.ref('rooms/' + roomId).update({ gameState: 'guessing' });
-             }
-           }, 1000);
+            timerInterval = setInterval(() => {
+              if (!room || room.gameState !== 'giving-hints') {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                return;
+              }
+              
+              if (room.timeLeft > 0) {
+                db.ref('rooms/' + roomId + '/timeLeft').set(room.timeLeft - 1);
+              } else {
+                clearInterval(timerInterval);
+                timerInterval = null;
+                db.ref('rooms/' + roomId).update({ gameState: 'guessing' });
+              }
+            }, 1000);
         }
       } else {
         if (timerInterval) {
@@ -468,4 +490,6 @@
         selectedWords: []
       });
     }
-  </script>
+    </script>
+</body>
+</html>
